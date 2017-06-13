@@ -8,7 +8,7 @@ module.exports = {
             exclude: /(bower_components|node_modules)/,
 
             // cf. chained loaders : http://webpack.github.io/docs/loaders.html#introduction
-            loader: 'imports?this=>window!babel',
+            loader: 'imports-loader?this=>window!babel-loader',
         }],
     },
     output: {
@@ -17,7 +17,7 @@ module.exports = {
     },
     resolve: {
         extensions: [
-            '',
+            '*',
             '.js',
         ],
     },

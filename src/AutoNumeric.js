@@ -143,7 +143,7 @@ class AutoNumeric {
 
         // Save the initial values (html attribute + element.value) for the pristine test
         this._saveInitialValues(initialValue);
-        
+
         // Setup the data for the persistent storage solution (ie. sessionStorage or cookies)
         this.sessionStorageAvailable = this.constructor._storageTest();
         this.storageNamePrefix = 'AUTO_'; // The prefix for the raw value storage name variable can be modified here
@@ -1153,7 +1153,6 @@ class AutoNumeric {
                 const selection = AutoNumericHelper.getElementSelection(this.domElement);
                 this.selectionStart = selection.start;
                 this.selectionEnd = selection.end;
-
                 // Then add the new raw value
                 this.historyTable.push({
                     // Save the rawValue and selection start/end
@@ -1554,7 +1553,7 @@ class AutoNumeric {
 
             return this;
         }
-        
+
         if (value === '' && this.settings.emptyInputBehavior === AutoNumeric.options.emptyInputBehavior.zero) {
             // Keep the value zero inside the element
             value = 0;
@@ -4300,7 +4299,7 @@ class AutoNumeric {
 
         // Add back the negative/positive sign and the currency symbol, at the right positions
         inputValue = AutoNumeric._mergeCurrencySignNegativePositiveSignAndValue(inputValue, settings, isValueNegative, isZeroOrHasNoValue); //TODO this function is called again in `_toggleNegativeBracket` if the brackets are removed; let's DRY this
-        
+
         if (AutoNumericHelper.isNull(rawValue)) {
             // If the raw value is not forced, use the default one from the settings object
             rawValue = settings.rawValue;
@@ -4398,8 +4397,9 @@ class AutoNumeric {
      * @private
      */
     _initialCaretPosition(value) {
+
         if (AutoNumericHelper.isNull(this.settings.caretPositionOnFocus)) {
-            AutoNumericHelper.throwError('`_initialCaretPosition()` should never be called when the `caretPositionOnFocus` option is `null`.');
+            //AutoNumericHelper.throwError('`_initialCaretPosition()` should never be called when the `caretPositionOnFocus` option is `null`.');
         }
 
         const isValueNegative = this.settings.rawValue < 0;
@@ -4435,7 +4435,7 @@ class AutoNumeric {
         } else if (this.settings.showPositiveSign && !isZeroOrHasNoValue) {
             signToUse = this.settings.positiveSignCharacter;
         }
-        
+
         const positiveNegativeSignSize = signToUse.length;
         const currencySymbolSize = this.settings.currencySymbol.length;
 
@@ -4797,7 +4797,7 @@ class AutoNumeric {
 
     /**
      * Return `true` if a round up should be done given the last digit, the settings and other information about the value.
-     * 
+     *
      * @param {number} lastDigit
      * @param {object} settings
      * @param {string} negativeSign
@@ -5050,7 +5050,7 @@ class AutoNumeric {
     _onFocusInAndMouseEnter(e) {
         //TODO `AutoNumericHelper.setElementValue` is called 3 times sequentially here, fix that
         const initialElementValue = AutoNumericHelper.getElementValue(this.domElement);
-        
+
         if (this.settings.unformatOnHover && e.type === 'mouseenter' && e.altKey) {
             this.constructor._unformatAltHovered(this);
 
@@ -5356,7 +5356,7 @@ class AutoNumeric {
                     selection = AutoNumericHelper.getElementSelection(this.domElement); //TODO is this needed a second time?
                     // Capture the new caret position. This is required because on keyup, `_updateAutoNumericHolderEventKeycode()` captures the old caret position
                     //TODO Check if this is an Android bug or an autoNumeric one
-                    this.androidSelectionStart = selection.start;
+                    this.androidSelectionStart = selection.start +1;
 
                     const decimalCharacterPosition = AutoNumericHelper.getElementValue(this.domElement).indexOf(this.settings.decimalCharacter);
                     const hasDecimalCharacter = decimalCharacterPosition === -1;
@@ -5708,7 +5708,7 @@ class AutoNumeric {
                         leftPartContainedADot = true;
                         leftPart = leftPart.replace('.', '');
                     }
-                    
+
                     rightPart = rightPart.replace('.', '');
                 }
                 // -- Here, we are good to go to continue on the same basis
@@ -6753,15 +6753,16 @@ class AutoNumeric {
      * @private
      */
     _setSelection(start, end) {
+
         //TODO use this function to replace the direct calls to `setElementSelection()`, wherever possible
         start = Math.max(start, 0);
+
         end = Math.min(end, AutoNumericHelper.getElementValue(this.domElement).length);
         this.selection = {
             start,
             end,
             length: end - start,
         };
-
         AutoNumericHelper.setElementSelection(this.domElement, start, end);
     }
 
@@ -6887,12 +6888,15 @@ class AutoNumeric {
         const [minTest, maxTest] = AutoNumeric._checkIfInRangeWithOverrideOption(normalizedNewValue, this.settings);
         let position = normalizedLeft.length;
         let newValue = normalizedNewValue;
-
         if (minTest && maxTest) {
+
             newValue = AutoNumeric._truncateDecimalPlaces(newValue, this.settings, isPaste);
+
             //TODO Check if we need to replace the hard-coded ',' with settings.decimalCharacter
             const testValue = (AutoNumericHelper.contains(newValue, ',')) ? newValue.replace(',', '.') : newValue;
+
             if (testValue === '' || testValue === this.settings.negativeSignCharacter) {
+
                 let valueToSetOnEmpty;
                 switch (this.settings.emptyInputBehavior) {
                     case AutoNumeric.options.emptyInputBehavior.zero:
@@ -6976,7 +6980,6 @@ class AutoNumeric {
     _expandSelectionOnSign() {
         const [signPosition, currencySymbolPosition] = this._getSignPosition();
         const selection = this.selection;
-
         // If selection catches something except sign and catches only space from sign
         if (selection.start < currencySymbolPosition && selection.end > signPosition) {
             // Then select without empty space
@@ -7781,4 +7784,4 @@ window.CustomEvent = CustomEvent;
  *
  * @type {AutoNumeric}
  */
-module.exports = AutoNumeric;
+export default AutoNumeric

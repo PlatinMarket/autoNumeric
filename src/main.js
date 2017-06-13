@@ -44,5 +44,5 @@ import AutoNumericPredefinedOptions from './AutoNumericPredefinedOptions';
  *
  * @type {AutoNumeric}
  */
-module.exports = AutoNumeric;
+export default AutoNumeric;
 //TODO Also export the AutoNumericEnum module

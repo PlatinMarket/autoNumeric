@@ -664,6 +664,7 @@ export default class AutoNumericHelper {
                 position.length = position.end - position.start;
             }
         } catch (error) {
+
             // Manages the cases where :
             // - the 'contenteditable' elements that have no selections
             // - the <input> element is of type 'hidden'
@@ -683,6 +684,7 @@ export default class AutoNumericHelper {
      * @param {int|null} end
      */
     static setElementSelection(element, start, end = null) {
+
         if (this.isUndefinedOrNullOrEmpty(end)) {
             end = start;
         }
